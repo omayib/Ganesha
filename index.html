@@ -128,11 +128,11 @@
     <body>
         <!-- HEADER START -->
         <div class="container">
-            <!-- <img
-                src="https://drive.google.com/u/0/uc?id=1EU42Xrd77ImP-yCBB5ri9M4AESse4csp&amp;export=download"
+             <img
+                src="https://drive.google.com/u/0/uc?id=1lAPkKHAJAEpjkJ5AKNXgGryOqLx28l3Z&export=download"
                 alt=""
                 width="100%"
-                /> -->
+                />
             </p>
             <div class="panel panel-info" style="padding: 10px;">
                 <p style="text-align: center;">Aplikasi AGANESHA by Prodi Informatika</p>
@@ -173,7 +173,7 @@
             <!-- PROFILE MHS -->
             <div class="panel-group">
                 <div class="panel panel-primary">
-                <div class="panel-heading">PROFIL MHS</div>
+                <div class="panel-heading">STEP 1. PROFIL MAHASISWA</div>
                 <div class="panel-body">
                     <form v-on:submit.prevent="submitProfile">
                     <div class="row">
@@ -245,7 +245,7 @@
             <!-- CATATAN HARI INI -->
             <div class="panel-group">
                 <div class="panel panel-primary">
-                  <div class="panel-heading">UNGGAH PROPOSAL</div>
+                  <div class="panel-heading">STEP 2. UNGGAH PROPOSAL</div>
                   <div class="panel-body">
                     <div class="panel-body">
                         <form v-on:submit.prevent="submitUsulan">
@@ -267,7 +267,7 @@
                                     v-model="dosenTerpilih"
                                     ></v-select>
                                 </div>
-                                <div class="form-group">
+                                <div>
                                     <label
                                         >File Proposal
                                         <input style="margin-top: 10px;"
@@ -290,7 +290,7 @@
                                     </button>
                                 </div>
 
-                                <div class="form-group">
+                                <div>
                                     <label
                                         >File Transkrip Nilai
                                         <input  style="margin-top: 10px;"
@@ -324,7 +324,7 @@
             <!-- END OF CATATAN HARI INI -->
             <div class="panel-group">
                 <div class="panel panel-danger">
-                  <div class="panel-heading">STEP 4. SUBMISION</div>
+                  <div class="panel-heading">STEP 3. SUBMISION</div>
                   <div class="panel-body">
                     <label class="w-100">
                       <input
@@ -339,7 +339,7 @@
                     </label>
                     <button
                       class="btn btn-danger"
-                      v-on:click="onClickButtonSubmit"
+                      v-on:click="onClickButtonSimpanPermanen"
                       :disabled="checkdata=='false'?'':disabled"
                     >
                       SIMPAN PERMANEN
@@ -391,15 +391,13 @@
                     name: "",
                     nim: "",
                     email: "",
-                    judul: "",
-                    dosenTerpilih:""
+                    judul: ""
                 },
                 profile: {
                     name: "",
                     nim: "",
                     email: "",
-                    judul: "",
-                    dosenTerpilih:""
+                    judul: ""
                 },
                 proposalDraft:{judul:"",dosenTerpilih:"",fileUrlProposal:"",fileUrlTranskrip:""},
                 notes:[],
@@ -407,7 +405,8 @@
                 fileProposal:"",
                 fileUrlProposal:"",
                 fileTranskrip:"",
-                fileUrlTranskrip:""
+                fileUrlTranskrip:"",
+                checkdata:false
             },
             components: {
                 Loading: VueLoading,
@@ -433,7 +432,8 @@
                 },
                 openTranskrip: function () {
                     window.open(app.fileUrlTranskrip, "_blank");
-                }
+                },
+                onClickButtonSimpanPermanen
             },
             mounted(){
                 this.fetchDosen();
@@ -618,12 +618,20 @@
                         console.log(result.data.data);
                         if(result.data.data.length>0){
                             var _profile=result.data.data.shift();
+                            console.log(_profile)
 
                             this.profileDraft.name = _profile.nama;
                             this.profileDraft.nim = _profile.nim;
                             this.profileDraft.email = _profile.email;
                             this.profileDraft.whatsapp = _profile.whatsapp;
                             this.profileDraft.ipk = _profile.ipk;
+
+                            this.proposalDraft.judul=_profile.judul;
+                            this.dosenTerpilih.name=_profile.pembimbing_nama;
+                            this.dosenTerpilih.email=_profile.pembimbing_email;
+
+                            this.fileUrlProposal = _profile.proposal;
+                            this.fileUrlTranskrip = _profile.transkrip;
 
                             // this.dosenTerpilih.name = _profile.pembimbing_nama;
                             // this.dosenTerpilih.email = _profile.pembimbing_email;
@@ -841,6 +849,34 @@
                 .catch((error)=>{
                     console.log("fetch dossen error "+error)
                 })
+        }
+        function onClickButtonSimpanPermanen(){
+            Swal.fire({
+                title: "Anda yakin?",
+                text: "Catatan akan diteruskan ke Dosen melalui Email. Cek juga Email Anda untuk melihat perkembangannya.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Submit",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let loader = this.$loading.show({
+                        loader: "dots",
+                    });
+                    var urlSubmission = baseUrl + "?action=107&nim=" + app.profileDraft.nim;
+                    axios.get(urlSubmission)
+                        .then((logResult)=>{
+                            loader.hide();
+                        })
+                        .catch((error)=>{
+                            loader.hide();
+                            console.log("fetch dossen error "+error)
+                        })
+                
+                }
+            });
+            
         }
         function fetchLogByNim(){
             var urlLogByNim = baseUrl + "?action=104&nim=" + app.profileDraft.nim;
