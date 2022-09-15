@@ -25,15 +25,15 @@
         />
         <style lang="css">
             .panel-warning{
-                border-color: #ff8400;
+                border-color: #5490ff;
             }
             .panel-warning>.panel-heading {
                 color: #4e3a03;
-                background-color: #f77f00;
-                border-color: #ff8400;
+                background-color: #5490ff;
+                border-color: #5490ff;
             }
             .panel-primary{
-                border-color: #ff8400;
+                border-color: #5490ff;
             }
             .panel-primary>.panel-heading {
                 color: #ffffff;
@@ -128,15 +128,15 @@
     <body>
         <!-- HEADER START -->
         <div class="container">
-            <img
-                src="https://drive.google.com/u/0/uc?id=1EU42Xrd77ImP-yCBB5ri9M4AESse4csp&amp;export=download"
+             <img
+                src="https://drive.google.com/u/0/uc?id=1lAPkKHAJAEpjkJ5AKNXgGryOqLx28l3Z&export=download"
                 alt=""
                 width="100%"
                 />
             </p>
             <div class="panel panel-info" style="padding: 10px;">
-                <p style="text-align: center;">Aplikasi SEMAR by Prodi Informatika</p>
-                <p style="text-align: center;">KARTU BIMBINGAN SKRIPSI<br>
+                <p style="text-align: center;">Aplikasi AGANESHA by Prodi Informatika</p>
+                <p style="text-align: center;">KOLABORASI RISET DOSEN - MAHASISWA<br>
                 <em>Pastikan koneksi internet Anda stabil dan kencang. Pada proses unggah file mungkin akan memakan waktu.</em> <br>
             </div>
         </div>
@@ -150,8 +150,8 @@
                   <div class="panel-body">
                     <div class="input-group input-group-lg">
                       <input
-                        v-model="profileDraft.nim"
-                        placeholder="NIM"
+                        v-model="nim"
+                        placeholder="19.11.12xx"
                         class="form-control"
                         @keyup.enter="onClickButtonCari"
                       />
@@ -161,6 +161,11 @@
                         </button>
                       </span>
                     </div>
+                    <div style="margin-top: 10px;">
+                        <p class="text-muted">
+                            Petunjuk : Bila pernah menggunakan SEMAR, lakukan pencarian profil Anda menggunakan NIM.
+                        </p>
+                    </div>
                   </div>
                 </div>
             </div>
@@ -168,7 +173,7 @@
             <!-- PROFILE MHS -->
             <div class="panel-group">
                 <div class="panel panel-primary">
-                <div class="panel-heading">PROFIL MHS</div>
+                <div class="panel-heading">STEP 1. PROFIL MAHASISWA</div>
                 <div class="panel-body">
                     <form v-on:submit.prevent="submitProfile">
                     <div class="row">
@@ -176,7 +181,6 @@
                         <div class="form-group">
                             <label>Nama</label>
                             <input
-                                :disabled=true
                                 type="text"
                                 class="form-control"
                                 v-model="profileDraft.name"
@@ -187,7 +191,6 @@
                         <div class="form-group">
                             <label>NIM</label>
                             <input
-                                :disabled=true
                                 type="text"
                                 v-model="profileDraft.nim"
                                 placeholder="19.11.1155x"
@@ -196,9 +199,27 @@
                         </div>
 
                         <div class="form-group">
+                            <label>Nomor Whatsapp</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                v-model="profileDraft.whatsapp"
+                                placeholder="08213454xxx"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Indeks Prestasi Komulatif (IPK)</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                v-model="profileDraft.ipk"
+                                placeholder="8.4"
+                            />
+                        </div>
+                        <div class="form-group">
                             <label>Email</label>
                             <input
-                                :disabled=true
                                 type="text"
                                 class="form-control"
                                 v-model="profileDraft.email"
@@ -206,29 +227,12 @@
                             />
                         </div>
 
-                        <div class="form-group">
-                            <label>Judul Skripsi</label>
-                            <input
-                                :disabled=true
-                                type="text"
-                                class="form-control"
-                                v-model="profileDraft.judul"
-                                placeholder="Pemodelan Arsitektur Perangkat Lunak Streaming"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label>Dosen Pendamping</label>
-                            <v-select
-                            label="name"
-                            v-model="dosenTerpilih"
-                            ></v-select>
-                        </div>
+                        
                         </div>
                     </div>
-
                     </form>
                     <p class="text-muted">
-                    Petunjuk : Silahkan isikan form diatas ini secara lengkap. Bila tidak memiliki dosen pendamping, silakan pilih dosen wali Anda.
+                    Petunjuk : Bila baru pertama kali menggunakan GANESHA, silakan SIMPAN profil Anda.
                     </p>
                 </div>
                 </div>
@@ -237,40 +241,101 @@
             <!-- CATATAN HARI INI -->
             <div class="panel-group">
                 <div class="panel panel-primary">
-                  <div class="panel-heading">KONFIRMASI CATATAN TERAKHIR</div>
+                  <div class="panel-heading">STEP 2. UNGGAH PROPOSAL</div>
+                  <div class="panel-body">
+                    <div class="panel-body">
+                        <form v-on:submit.prevent="submitUsulan">
+                            <div class="container-fluid">
+                                <div class="form-group">
+                                    <label>Apa usulan judul skripsimu?</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="proposalDraft.judul"
+                                        placeholder="Pemodelan Arsitektur Perangkat Lunak Streaming"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label>Dengan dosen siapa Anda ingin bergabung ?</label>
+                                    <v-select
+                                    :options="dosen"
+                                    label="name"
+                                    v-model="dosenTerpilih"
+                                    ></v-select>
+                                </div>
+                                <div>
+                                    <div>
+                                        <label>File Proposal
+                                        </label>
+                                    </div>
+                                    <div>
+                                    <button
+                                        class="btn btn-primary"
+                                        v-if="(fileUrlProposal)"
+                                        @click="openProposal"
+                                    >
+                                        <i class="fa fa-eye"></i> LIHAT FILE PROPOSAL
+                                    </button>
+                                </div>
+                                </div>
+
+                                <div>
+                                    <div>
+                                        <label>File Transkrip Nilai
+                                        </label>
+                                    </div>
+                                    <div>
+
+                                        <button
+                                            class="btn btn-primary"
+                                            v-if="(fileUrlTranskrip)"
+                                            @click="openTranskrip"
+                                        >
+                                            <i class="fa fa-eye"></i> LIHAT FILE TRANSKRIP
+                                        </button>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </form>                 
+                      </div>
+                  </div>
+                </div>
+            </div>
+            <!-- END OF CATATAN HARI INI -->
+            <!-- CATATAN HARI INI -->
+            <div class="panel-group">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">ULASAN</div>
                   <div class="panel-body">
                     <form v-on:submit.prevent="submitCatatan">
                     <div class="input-group input-group-lg" style="margin-bottom: 25px;">
-                        <label>Kendala yang sedang dihadapi Mahasiswa</label>
-                        <textarea rows="4" cols="50"
-                            :disabled=true
-                            v-model="noteDraft.kendala"
-                            placeholder="contoh : saya bingung menuliskan tingkat akurasi"
-                            class="form-control"
-                        ></textarea>
-                    </div>
-                    <div class="input-group input-group-lg" style="margin-bottom: 25px;">
-                        <label>Solusi</label>
-                        <textarea rows="4" cols="50"
-                            :disabled=true
-                            style="width: 100%;"
-                            v-model="noteDraft.solusi"
-                            placeholder="solusi, saran, arahan dari dosen pembimbing"
-                            class="form-control"
-                        ></textarea>
-                    </div>
-                    <div class="input-group input-group-lg" style="margin-bottom: 25px;">
+                        <div>
                         <label>Apa tanggapan Bp/Ibu ?</label>
-                        <textarea rows="4" cols="50"
+                    </div>
+                    <div>
+                        <textarea rows="8" cols="50"
                             style="width: 100%;"
                             v-model="noteDraft.feedback"
-                            placeholder="tanggapan balik dari dosen pembimbing"
+                            placeholder="tanggapan balik dari calon dosen pembimbing"
                             class="form-control"
                             @keyup.enter=""
                         ></textarea>
                     </div>
+                    </div>
                     <div class="form-group">
-                        <button class="btn btn-primary">OK</button>
+                        <table style="width: 100%;border-spacing: 10px;">
+                            <tr >
+                                <td style="margin: 0px; border-spacing: 10px;padding-right: 10px;">
+                                    <button class="btn btn-danger" style="width: 100%;margin: 5px;">TOLAK</button>
+
+                                </td>
+                                <td style="margin: 0px;border-spacing: 10px;padding-left: 10px;">
+                                    <button class="btn btn-primary" style="width: 100%;margin: 5px;">SETUJU</button>
+                                </td>
+                            </tr>
+                        </table>
+
                     </div>
                     </form>
                     <p class="text-muted">
@@ -280,30 +345,11 @@
                 </div>
             </div>
             <!-- END OF CATATAN HARI INI -->
-             <!-- CATATAN KEMARIN -->
-            <div class="panel-group">
-                <div class="panel panel-primary">
-                  <div class="panel-heading">CATATAN KEMARIN</div>
-                  <div class="panel-body">
-                    <div class="timeline-wrapper"> 
-                        <ul class="StepProgress"> 
-                          <li  v-for="note in notes" class="StepProgress-item">
-                            <div class="bold time">{{note.timestamp }}</div> 
-                            <div style="margin: 0 0 0 68px;" class="bold">masalah : {{note.kendala}}</div>
-                            <div style="margin: 0 0 0 68px">solusi : {{note.solusi}}</div>
-                            <div style="margin: 0 0 0 68px">tanggapan : {{note.feedback}}</div>
-                          </li>
-                        </ul>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <!-- END OF CATATAN HARI INI -->
         </main>
     </body>
     <script>
-        var nimToBeSearch =<?=nim_from_server?>
-        // var nimToBeSearch="19.21.1031";
+        // var nimToBeSearch =<?=nim_from_server?>;
+        var nimToBeSearch = "12.13.1112";
         Vue.use(VueLoading);
         Vue.component("v-select", VueSelect.VueSelect);
         const Toast = Swal.mixin({
@@ -313,82 +359,399 @@
             timer: 3000,
             timerProgressBar: true,
         });
-        var key = <?=deploymentId?>;
+        
+        var key = "AKfycbzK9z1kT_oiNO6Jkp-wQVTA7Tqb1HAZqeCmx0yospbHAgb7VKdhQ8UC-9Gmt8CjUxJu";
         var baseUrl = "https://script.google.com/macros/s/" + key + "/exec";
         var app = new Vue({
             el:"#app",
             data:{
-                dosen: [],
+                nim:"12.13.1112",
+                dosen: [{ name: "Arif AKbarul", email: "arif.akbarul@amikom.ac.id" },{ name: "Windha Mega", email: "windha@amikom.ac.id" }],
                 dosenTerpilih: { name: "", email: "" },
                 profileDraft: {
                     name: "",
                     nim: "",
                     email: "",
-                    judul: "",
-                    dosenTerpilih:""
+                    judul: ""
                 },
                 profile: {
                     name: "",
                     nim: "",
                     email: "",
-                    judul: "",
-                    dosenTerpilih:""
+                    judul: ""
                 },
+                proposalDraft:{judul:"",dosenTerpilih:"",fileUrlProposal:"",fileUrlTranskrip:""},
                 notes:[],
-                noteDraft:{id:-1,kendala:"",solusi:"",feedback:""}
+                noteDraft:{kendala:"",solusi:"", feedback:""},
+                fileProposal:"",
+                fileUrlProposal:"",
+                fileTranskrip:"",
+                fileUrlTranskrip:"",
+                checkdata:false
             },
             components: {
                 Loading: VueLoading,
             },
             methods:{
+                submitFileTranskrip,
+                submitFileProposal,
+                submitUsulan,
+                submitProfile,
                 onClickButtonCari,
-                submitCatatan
+                submitCatatan,
+                fetchDosen,
+                handleFileProposal(event) {
+                    this.fileProposal = event.target.files[0];
+                    console.log("file proposal "+this.fileProposal)
+                },
+                openProposal: function () {
+                    window.open(app.fileUrlProposal, "_blank");
+                },
+                handleFileTranskrip(event) {
+                    this.fileTranskrip = event.target.files[0];
+                    console.log("file transkrip "+this.fileTranskrip)
+                },
+                openTranskrip: function () {
+                    window.open(app.fileUrlTranskrip, "_blank");
+                },
+                onClickButtonSimpanPermanen
             },
             mounted(){
                 this.onClickButtonCari();
             }
         })
-        function onClickButtonCari(){           
+        /*
+                    {timestamp:"9/2/2022", masalah:"lorem ipsum",solusi:"dep amit slira mark mov da wen", feedback:"yes"},
+                    {timestamp:"9/2/2022", masalah:"lorem ipsum 2",solusi:"dep amit slira mark mov da wen 2", feedback:"yes"},
+                    {timestamp:"9/2/2022", masalah:"lorem ipsum 3",solusi:"dep amit slira mark mov da wen 3", feedback:"yes"} 
+        */
+        function validateEmail(mail) 
+        {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+            {
+                return (true)
+            }
+                return (false)
+        }
+        function submitUsulan(){
+            if( this.proposalDraft.judul === ""){
+                Swal.fire("Ops!", "Judul masih kosong", "error");
+                return;
+            }
+            if( this.dosenTerpilih === ""){
+                Swal.fire("Ops!", "Dosen masih kosong", "error");
+                return;
+            }
+            // if( this.proposalDraft.fileUrlProposal === ""){
+            //     Swal.fire("Ops!", "Proposal belum diunggah", "error");
+            //     return;
+            // }
+            // if( this.proposalDraft.fileUrlTranskrip === ""){
+            //     Swal.fire("Ops!", "Transkrips belum diunggah", "error");
+            //     return;
+            // }
+            var urlProfile = baseUrl + "?action=505";
+            var dataTobeUpload = {
+                nim:this.profileDraft.nim,
+                judul:this.proposalDraft.judul,
+                namaDosenTerpilih:this.dosenTerpilih.name,
+                emailDosenTerpilih:this.dosenTerpilih.email
+            }
+            console.log(dataTobeUpload);
+            Swal.fire({
+                title: "Data akan disimpan?",
+                text: "Periksa dengan teliti",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Submit",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                let loader = this.$loading.show({
+                    loader: "dots",
+                });
+                axios({
+                    method: "post",
+                    url: urlProfile,
+                    data: dataTobeUpload,
+                    headers: {
+                    "Content-Type": "text/plain",
+                    },
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+                })
+                .then(function (response) {
+                    //handle success
+                        loader.hide();
+                        var _profil = response.data.data;
+                        console.log(_profil);
+                        if (_profil) {
+                            Toast.fire({
+                                icon: "success",
+                                title: "Profil berhasil diperbarui",
+                                });
+                        } else {
+                            Toast.fire({
+                                icon: "error",
+                                title: "Profil gagal diperbarui",
+                                });
+                        }
+                    })
+                .catch(function (response) {
+                        console.log(response);
+                        loader.hide();
+                });
+                }
+            });
+        }
+        function submitProfile(){
+            if( this.profileDraft.name === ""){
+                Swal.fire("Ops!", "Nama masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.nim === ""){
+                Swal.fire("Ops!", "Nim masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.email === "" && !validateEmail(this.profileDraft.email)){
+                Swal.fire("Ops!", "Email tidak valid", "error");
+                return;
+            }
+            if( this.profileDraft.whatsapp === ""){
+                Swal.fire("Ops!", "Whatsapp masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.ipk === ""){
+                Swal.fire("Ops!", "IPK masih kosong", "error");
+                return;
+            }
+            var urlProfile = baseUrl + "?action=501";
+            var dataTobeUpload = {
+                nim:this.profileDraft.nim,
+                nama:this.profileDraft.name, 
+                email:this.profileDraft.email,
+                whatsapp:this.profileDraft.whatsapp,
+                ipk:this.profileDraft.ipk
+            }
+            console.log(dataTobeUpload);
+            Swal.fire({
+                title: "Data akan disimpan?",
+                text: "Periksa dengan teliti",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Submit",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                let loader = this.$loading.show({
+                    loader: "dots",
+                });
+                axios({
+                    method: "post",
+                    url: urlProfile,
+                    data: dataTobeUpload,
+                    headers: {
+                    "Content-Type": "text/plain",
+                    },
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+                })
+                .then(function (response) {
+                    //handle success
+                        loader.hide();
+                        var _profil = response.data.data;
+                        console.log(_profil);
+                        if (_profil) {
+                            Toast.fire({
+                                icon: "success",
+                                title: "Profil berhasil diperbarui",
+                                });
+                        } else {
+                            Toast.fire({
+                                icon: "error",
+                                title: "Profil gagal diperbarui",
+                                });
+                        }
+                    })
+                .catch(function (response) {
+                        console.log(response);
+                        loader.hide();
+                });
+                }
+            });
+        }
+        function onClickButtonCari(){    
+             
             let loader = this.$loading.show({
             loader: "dots",
             });
             var urlProfile = baseUrl + "?action=103&nim=" + nimToBeSearch;
-            var urlLogByNim = baseUrl + "?action=104&nim=" + nimToBeSearch;
-            let endpoints = [urlProfile,urlLogByNim];
+            console.log(urlProfile);
             axios
-                .all(endpoints.map((endpoint)=>axios.get(endpoint)))
-                .then(
-                    
-                    axios.spread((profileResult,logResult)=>{
+                .get(urlProfile)
+                .then((result)=>{
                         loader.hide();
-                        console.log(profileResult.data.data);
-                        console.log(logResult.data.data);
-                        if(profileResult.data.data.length>0){
-                            var _profile=profileResult.data.data.shift();
+                        console.log(result.data.data);
+                        if(result.data.data.length>0){
+                            var _profile=result.data.data.shift();
+                            console.log(_profile)
 
                             this.profileDraft.name = _profile.nama;
                             this.profileDraft.nim = _profile.nim;
                             this.profileDraft.email = _profile.email;
-                            this.profileDraft.judul = _profile.judul;
+                            this.profileDraft.whatsapp = _profile.whatsapp;
+                            this.profileDraft.ipk = _profile.ipk;
 
-                            this.dosenTerpilih.name = _profile.pembimbing_nama;
-                            this.dosenTerpilih.email = _profile.pembimbing_email;
-                        }
-                        if(logResult.data.data.length>0){
-                            renderLog(logResult.data.data);
+                            this.proposalDraft.judul=_profile.judul;
+                            this.dosenTerpilih.name=_profile.pembimbing_nama;
+                            this.dosenTerpilih.email=_profile.pembimbing_email;
+
+                            this.fileUrlProposal = _profile.proposal;
+                            this.fileUrlTranskrip = _profile.transkrip;
+
+                            // this.dosenTerpilih.name = _profile.pembimbing_nama;
+                            // this.dosenTerpilih.email = _profile.pembimbing_email;
                         }
                     })
-                )
                 .catch(function (error) {
                     // handle error
                     console.log(error);
                     loader.hide();
                 })
         }
-        function submitCatatan(){
-            var urlNoteSubmission = baseUrl + "?action=503";
+        function submitFileTranskrip() {
+            if (!this.fileTranskrip) {
+                Swal.fire("Ops!", "File transkrip belum dipilih", "error");
+                return;
+            }
+            let loader = this.$loading.show({
+                loader: "dots",
+            });
+            const qs = new URLSearchParams({
+                filename: this.fileTranskrip.name,
+                mimeType: this.fileTranskrip.type,
+                action: 504,
+                nim: this.profileDraft.nim,
+                jenis: "transkrip",
+            });
+            const url = baseUrl +"?"+qs;
+            const fr = new FileReader();
+            fr.readAsArrayBuffer(this.fileTranskrip);
+            fr.onload = (f) => {
+            axios({
+                method: "post",
+                url: url,
+                data: JSON.stringify([...new Int8Array(f.target.result)]),
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+            })
+                .then(function (r) {
+                app.fileUrlTranskrip = r.data.data.fileUrl;
+                loader.hide();
+                Swal.fire(
+                    "Good job!",
+                    "Kamu berhasil mengunngah transkrip",
+                    "success"
+                );
+                })
+                .then((re) => {
+                    loader.hide();
+                    console.log(re);
+                })
+                .catch((error) => {
+                    loader.hide();
+                    Swal.fire(
+                        "Ops!",
+                        "Terjadi kesalahan, mungkin nim tidak valid",
+                        "error"
+                    );
+                });
+            };
+        }
+        function submitFileProposal() {
+            if (!this.fileProposal) {
+                Swal.fire("Ops!", "File proposal belum dipilih", "error");
+                return;
+            }
+            let loader = this.$loading.show({
+                loader: "dots",
+            });
+            const qs = new URLSearchParams({
+                filename: this.fileProposal.name,
+                mimeType: this.fileProposal.type,
+                action: 504,
+                nim: this.profileDraft.nim,
+                jenis: "proposal",
+            });
+
+            const fr = new FileReader();
+            fr.readAsArrayBuffer(this.fileProposal);
+            fr.onload = (f) => {
+            axios({
+                method: "post",
+                url: baseUrl + "?" + qs,
+                data: JSON.stringify([...new Int8Array(f.target.result)]),
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+            })
+                .then(function (r) {
+                app.fileUrlProposal = r.data.data.fileUrl;
+                loader.hide();
+                Swal.fire(
+                    "Good job!",
+                    "Kamu berhasil mengunngah proposal",
+                    "success"
+                );
+                })
+                .then((re) => {
+                loader.hide();
+                console.log(re);
+                })
+                .catch((error) => {
+                loader.hide();
+                Swal.fire(
+                    "Ops!",
+                    "Terjadi kesalahan, mungkin nim tidak valid",
+                    "error"
+                );
+                });
+            };
+        }
+        function submitCatatan(){    
+            if( this.profileDraft.name === ""){
+                Swal.fire("Ops!", "Nama masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.nim === ""){
+                Swal.fire("Ops!", "Nim masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.email === "" && !validateEmail(this.profileDraft.email)){
+                Swal.fire("Ops!", "Email tidak valid", "error");
+                return;
+            }
+            if( this.profileDraft.judul === ""){
+                Swal.fire("Ops!", "Judul masih kosong", "error");
+                return;
+            }
+            if( this.dosenTerpilih.name === "" && this.dosenTerpilih.email === ""){
+                Swal.fire("Ops!", "Dosen masih kosong", "error");
+                return;
+            } 
+            if( this.noteDraft.kendala === ""){
+                Swal.fire("Ops!", "Masalah masih kosong", "error");
+                return;
+            } 
+            if( this.noteDraft.solusi === ""){
+                Swal.fire("Ops!", "Rekomendasi solusi masih kosong", "error");
+                return;
+            } 
+            var urlNoteSubmission = baseUrl + "?action=502";
+            var randomId = Math.floor(100000 + Math.random() * 900000);
             var dataTobeUpload = {
-                id:this.noteDraft.id,
+                id:randomId,
                 nim:this.profileDraft.nim,
                 nama:this.profileDraft.name,
                 judul:this.profileDraft.judul,
@@ -398,12 +761,12 @@
                 email:this.profileDraft.email,
                 pembimbing_nama:this.dosenTerpilih.name,
                 pembimbing_email:this.dosenTerpilih.email,
-                status:"CONFIRMED"
+                status:"PENDING"
             }
             console.log(dataTobeUpload);
             Swal.fire({
                 title: "Data akan disimpan?",
-                text: "Periksa dengan teliti",
+                text: "Catatan akan diteruskan ke Dosen melalui Email. Cek juga Email Anda untuk melihat perkembangannya.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -448,7 +811,51 @@
                 }
             });
         }
-  
+        function fetchDosen(){
+            var urlDosen = baseUrl + "?action=102";
+
+            axios.get(urlDosen)
+                .then((result)=>{
+                    var _dosen  = result.data.data;
+                    if(_dosen.length>0){
+                        this.dosen = [];
+                        _dosen.forEach((element,idx)=>{
+                            this.dosen.push({name:element.nama_dosen, email:element.email_dosen});
+                        })
+                    }
+                })
+                .catch((error)=>{
+                    console.log("fetch dossen error "+error)
+                })
+        }
+        function onClickButtonSimpanPermanen(){
+            Swal.fire({
+                title: "Anda yakin?",
+                text: "Catatan akan diteruskan ke Dosen melalui Email. Cek juga Email Anda untuk melihat perkembangannya.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Submit",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let loader = this.$loading.show({
+                        loader: "dots",
+                    });
+                    var urlSubmission = baseUrl + "?action=107&nim=" + app.profileDraft.nim;
+                    axios.get(urlSubmission)
+                        .then((logResult)=>{
+                            loader.hide();
+                        })
+                        .catch((error)=>{
+                            loader.hide();
+                            console.log("fetch dossen error "+error)
+                        })
+                
+                }
+            });
+            
+        }
         function fetchLogByNim(){
             var urlLogByNim = baseUrl + "?action=104&nim=" + app.profileDraft.nim;
             axios.get(urlLogByNim)
@@ -467,18 +874,12 @@
             data.forEach(element => {
                 var tgl = new Date(element.timestamp).toDateString();
                 var obj = {timestamp:tgl,
-                        kendala:element.kendala,
+                        masalah:element.kendala,
                         solusi:element.solusi,
-                        id:element.id,
                         feedback:element.feedback}
                                 
                 app.notes.push(Object.assign({}, obj))
             });
-
-            app.noteDraft.kendala = app.notes[0].kendala;
-            app.noteDraft.solusi = app.notes[0].solusi;
-            app.noteDraft.feedback = app.notes[0].feedback;
-            app.noteDraft.id = app.notes[0].id;
         }
     </script>
 </html>
