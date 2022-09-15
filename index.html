@@ -135,7 +135,7 @@
                 /> -->
             </p>
             <div class="panel panel-info" style="padding: 10px;">
-                <p style="text-align: center;">Aplikasi GANESHA by Prodi Informatika</p>
+                <p style="text-align: center;">Aplikasi AGANESHA by Prodi Informatika</p>
                 <p style="text-align: center;">KOLABORASI RISET DOSEN - MAHASISWA<br>
                 <em>Pastikan koneksi internet Anda stabil dan kencang. Pada proses unggah file mungkin akan memakan waktu.</em> <br>
             </div>
@@ -199,6 +199,25 @@
                         </div>
 
                         <div class="form-group">
+                            <label>Nomor Whatsapp</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                v-model="profileDraft.whatsapp"
+                                placeholder="08213454xxx"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Indeks Prestasi Komulatif (IPK)</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                v-model="profileDraft.ipk"
+                                placeholder="8.4"
+                            />
+                        </div>
+                        <div class="form-group">
                             <label>Email</label>
                             <input
                                 type="text"
@@ -217,7 +236,7 @@
                     </div>
                     </form>
                     <p class="text-muted">
-                    Petunjuk : Bila baru pertama kali menggunakan SEMAR, silakan SIMPAN profil Anda.
+                    Petunjuk : Bila baru pertama kali menggunakan GANESHA, silakan SIMPAN profil Anda.
                     </p>
                 </div>
                 </div>
@@ -236,7 +255,7 @@
                                     <input
                                         type="text"
                                         class="form-control"
-                                        v-model="profileDraft.judul"
+                                        v-model="proposalDraft.judul"
                                         placeholder="Pemodelan Arsitektur Perangkat Lunak Streaming"
                                     />
                                 </div>
@@ -248,11 +267,11 @@
                                     v-model="dosenTerpilih"
                                     ></v-select>
                                 </div>
-                                <div>
+                                <div class="form-group">
                                     <label
                                         >File Proposal
-                                        <input
-                                        type="file"
+                                        <input style="margin-top: 10px;"
+                                        type="file" 
                                         @change="handleFileProposal( $event )"
                                         />
                                     </label>
@@ -270,6 +289,29 @@
                                         <i class="fa fa-eye"></i> LIHAT
                                     </button>
                                 </div>
+
+                                <div class="form-group">
+                                    <label
+                                        >File Transkrip Nilai
+                                        <input  style="margin-top: 10px;"
+                                        type="file"
+                                        @change="handleFileTranskrip( $event )"
+                                        />
+                                    </label>
+                                    <button
+                                        class="btn btn-primary"
+                                        @click="submitFileTranskrip"
+                                    >
+                                        UNGGAH
+                                    </button>
+                                    <button
+                                        class="btn btn-primary"
+                                        v-if="(fileUrlTranskrip)"
+                                        @click="openTranskrip"
+                                    >
+                                        <i class="fa fa-eye"></i> LIHAT
+                                    </button>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-primary">SIMPAN</button>
@@ -280,6 +322,31 @@
                 </div>
             </div>
             <!-- END OF CATATAN HARI INI -->
+            <div class="panel-group">
+                <div class="panel panel-danger">
+                  <div class="panel-heading">STEP 4. SUBMISION</div>
+                  <div class="panel-body">
+                    <label class="w-100">
+                      <input
+                        type="checkbox"
+                        class="text-muted"
+                        v-model="checkdata"
+                        true-value="true"
+                        false-value="false"
+                      />
+                      Saya telah melakukan pengecekan ulang pada data diatas dan dengan
+                      ini menyatakan data yang saya kirimkan sudah benar.
+                    </label>
+                    <button
+                      class="btn btn-danger"
+                      v-on:click="onClickButtonSubmit"
+                      :disabled="checkdata=='false'?'':disabled"
+                    >
+                      SIMPAN PERMANEN
+                    </button>
+                  </div>
+                </div>
+              </div>
              <!-- CATATAN KEMARIN -->
             <div class="panel-group">
                 <div class="panel panel-primary">
@@ -312,12 +379,12 @@
             timerProgressBar: true,
         });
         
-        var key =""
+        var key = "AKfycbzK9z1kT_oiNO6Jkp-wQVTA7Tqb1HAZqeCmx0yospbHAgb7VKdhQ8UC-9Gmt8CjUxJu";
         var baseUrl = "https://script.google.com/macros/s/" + key + "/exec";
         var app = new Vue({
             el:"#app",
             data:{
-                nim:"",
+                nim:"12.13.1112",
                 dosen: [{ name: "Arif AKbarul", email: "arif.akbarul@amikom.ac.id" },{ name: "Windha Mega", email: "windha@amikom.ac.id" }],
                 dosenTerpilih: { name: "", email: "" },
                 profileDraft: {
@@ -334,15 +401,19 @@
                     judul: "",
                     dosenTerpilih:""
                 },
+                proposalDraft:{judul:"",dosenTerpilih:"",fileUrlProposal:"",fileUrlTranskrip:""},
                 notes:[],
                 noteDraft:{kendala:"",solusi:"", feedback:""},
                 fileProposal:"",
-                fileUrlProposal:""
+                fileUrlProposal:"",
+                fileTranskrip:"",
+                fileUrlTranskrip:""
             },
             components: {
                 Loading: VueLoading,
             },
             methods:{
+                submitFileTranskrip,
                 submitFileProposal,
                 submitUsulan,
                 submitProfile,
@@ -351,9 +422,17 @@
                 fetchDosen,
                 handleFileProposal(event) {
                     this.fileProposal = event.target.files[0];
+                    console.log("file proposal "+this.fileProposal)
                 },
                 openProposal: function () {
                     window.open(app.fileUrlProposal, "_blank");
+                },
+                handleFileTranskrip(event) {
+                    this.fileTranskrip = event.target.files[0];
+                    console.log("file transkrip "+this.fileTranskrip)
+                },
+                openTranskrip: function () {
+                    window.open(app.fileUrlTranskrip, "_blank");
                 }
             },
             mounted(){
@@ -374,40 +453,28 @@
                 return (false)
         }
         function submitUsulan(){
-            console.log("submit usulan");
-        }
-        function submitFileProposal(){
-            console.log("submit proposal");
-        }
-        function submitProfile(){
-            if( this.profileDraft.name === ""){
-                Swal.fire("Ops!", "Nama masih kosong", "error");
-                return;
-            }
-            if( this.profileDraft.nim === ""){
-                Swal.fire("Ops!", "Nim masih kosong", "error");
-                return;
-            }
-            if( this.profileDraft.email === "" && !validateEmail(this.profileDraft.email)){
-                Swal.fire("Ops!", "Email tidak valid", "error");
-                return;
-            }
-            if( this.profileDraft.judul === ""){
+            if( this.proposalDraft.judul === ""){
                 Swal.fire("Ops!", "Judul masih kosong", "error");
                 return;
             }
-            if( this.dosenTerpilih.name === "" && this.dosenTerpilih.email === ""){
+            if( this.dosenTerpilih === ""){
                 Swal.fire("Ops!", "Dosen masih kosong", "error");
                 return;
             }
-            var urlProfile = baseUrl + "?action=501";
+            // if( this.proposalDraft.fileUrlProposal === ""){
+            //     Swal.fire("Ops!", "Proposal belum diunggah", "error");
+            //     return;
+            // }
+            // if( this.proposalDraft.fileUrlTranskrip === ""){
+            //     Swal.fire("Ops!", "Transkrips belum diunggah", "error");
+            //     return;
+            // }
+            var urlProfile = baseUrl + "?action=505";
             var dataTobeUpload = {
                 nim:this.profileDraft.nim,
-                nama:this.profileDraft.name, 
-                email:this.profileDraft.email,
-                judul:this.profileDraft.judul,
-                pembimbing_nama:this.dosenTerpilih.name,
-                pembimbing_email:this.dosenTerpilih.email
+                judul:this.proposalDraft.judul,
+                namaDosenTerpilih:this.dosenTerpilih.name,
+                emailDosenTerpilih:this.dosenTerpilih.email
             }
             console.log(dataTobeUpload);
             Swal.fire({
@@ -428,9 +495,87 @@
                     url: urlProfile,
                     data: dataTobeUpload,
                     headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "text/plain",
                     },
                     "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+                })
+                .then(function (response) {
+                    //handle success
+                        loader.hide();
+                        var _profil = response.data.data;
+                        console.log(_profil);
+                        if (_profil) {
+                            Toast.fire({
+                                icon: "success",
+                                title: "Profil berhasil diperbarui",
+                                });
+                        } else {
+                            Toast.fire({
+                                icon: "error",
+                                title: "Profil gagal diperbarui",
+                                });
+                        }
+                    })
+                .catch(function (response) {
+                        console.log(response);
+                        loader.hide();
+                });
+                }
+            });
+        }
+        function submitProfile(){
+            if( this.profileDraft.name === ""){
+                Swal.fire("Ops!", "Nama masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.nim === ""){
+                Swal.fire("Ops!", "Nim masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.email === "" && !validateEmail(this.profileDraft.email)){
+                Swal.fire("Ops!", "Email tidak valid", "error");
+                return;
+            }
+            if( this.profileDraft.whatsapp === ""){
+                Swal.fire("Ops!", "Whatsapp masih kosong", "error");
+                return;
+            }
+            if( this.profileDraft.ipk === ""){
+                Swal.fire("Ops!", "IPK masih kosong", "error");
+                return;
+            }
+            var urlProfile = baseUrl + "?action=501";
+            var dataTobeUpload = {
+                nim:this.profileDraft.nim,
+                nama:this.profileDraft.name, 
+                email:this.profileDraft.email,
+                whatsapp:this.profileDraft.whatsapp,
+                ipk:this.profileDraft.ipk
+            }
+            console.log(dataTobeUpload);
+            Swal.fire({
+                title: "Data akan disimpan?",
+                text: "Periksa dengan teliti",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Submit",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                let loader = this.$loading.show({
+                    loader: "dots",
+                });
+                axios({
+                    method: "post",
+                    url: urlProfile,
+                    data: dataTobeUpload,
+                    headers: {
+                    "Content-Type": "text/plain",
+                    },
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
                 })
                 .then(function (response) {
                     //handle success
@@ -465,37 +610,128 @@
             loader: "dots",
             });
             var urlProfile = baseUrl + "?action=103&nim=" + this.nim;
-            var urlLogByNim = baseUrl + "?action=104&nim=" + this.nim;
-            let endpoints = [urlProfile,urlLogByNim];
+            let endpoints = [urlProfile];
             axios
-                .all(endpoints.map((endpoint)=>axios.get(endpoint)))
-                .then(
-                    
-                    axios.spread((profileResult,logResult)=>{
+                .get(urlProfile)
+                .then((result)=>{
                         loader.hide();
-                        console.log(profileResult.data.data);
-                        console.log(logResult.data.data);
-                        if(profileResult.data.data.length>0){
-                            var _profile=profileResult.data.data.shift();
+                        console.log(result.data.data);
+                        if(result.data.data.length>0){
+                            var _profile=result.data.data.shift();
 
                             this.profileDraft.name = _profile.nama;
                             this.profileDraft.nim = _profile.nim;
                             this.profileDraft.email = _profile.email;
-                            this.profileDraft.judul = _profile.judul;
+                            this.profileDraft.whatsapp = _profile.whatsapp;
+                            this.profileDraft.ipk = _profile.ipk;
 
-                            this.dosenTerpilih.name = _profile.pembimbing_nama;
-                            this.dosenTerpilih.email = _profile.pembimbing_email;
-                        }
-                        if(logResult.data.data.length>0){
-                            renderLog(logResult.data.data);
+                            // this.dosenTerpilih.name = _profile.pembimbing_nama;
+                            // this.dosenTerpilih.email = _profile.pembimbing_email;
                         }
                     })
-                )
                 .catch(function (error) {
                     // handle error
                     console.log(error);
                     loader.hide();
                 })
+        }
+        function submitFileTranskrip() {
+            if (!this.fileTranskrip) {
+                Swal.fire("Ops!", "File transkrip belum dipilih", "error");
+                return;
+            }
+            let loader = this.$loading.show({
+                loader: "dots",
+            });
+            const qs = new URLSearchParams({
+                filename: this.fileTranskrip.name,
+                mimeType: this.fileTranskrip.type,
+                action: 504,
+                nim: this.profileDraft.nim,
+                jenis: "transkrip",
+            });
+            const url = baseUrl +"?"+qs;
+            const fr = new FileReader();
+            fr.readAsArrayBuffer(this.fileTranskrip);
+            fr.onload = (f) => {
+            axios({
+                method: "post",
+                url: url,
+                data: JSON.stringify([...new Int8Array(f.target.result)]),
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+            })
+                .then(function (r) {
+                app.fileUrlTranskrip = r.data.data.fileUrl;
+                loader.hide();
+                Swal.fire(
+                    "Good job!",
+                    "Kamu berhasil mengunngah transkrip",
+                    "success"
+                );
+                })
+                .then((re) => {
+                    loader.hide();
+                    console.log(re);
+                })
+                .catch((error) => {
+                    loader.hide();
+                    Swal.fire(
+                        "Ops!",
+                        "Terjadi kesalahan, mungkin nim tidak valid",
+                        "error"
+                    );
+                });
+            };
+        }
+        function submitFileProposal() {
+            if (!this.fileProposal) {
+                Swal.fire("Ops!", "File proposal belum dipilih", "error");
+                return;
+            }
+            let loader = this.$loading.show({
+                loader: "dots",
+            });
+            const qs = new URLSearchParams({
+                filename: this.fileProposal.name,
+                mimeType: this.fileProposal.type,
+                action: 504,
+                nim: this.profileDraft.nim,
+                jenis: "proposal",
+            });
+
+            const fr = new FileReader();
+            fr.readAsArrayBuffer(this.fileProposal);
+            fr.onload = (f) => {
+            axios({
+                method: "post",
+                url: baseUrl + "?" + qs,
+                data: JSON.stringify([...new Int8Array(f.target.result)]),
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+            })
+                .then(function (r) {
+                app.fileUrlProposal = r.data.data.fileUrl;
+                loader.hide();
+                Swal.fire(
+                    "Good job!",
+                    "Kamu berhasil mengunngah proposal",
+                    "success"
+                );
+                })
+                .then((re) => {
+                loader.hide();
+                console.log(re);
+                })
+                .catch((error) => {
+                loader.hide();
+                Swal.fire(
+                    "Ops!",
+                    "Terjadi kesalahan, mungkin nim tidak valid",
+                    "error"
+                );
+                });
+            };
         }
         function submitCatatan(){    
             if( this.profileDraft.name === ""){
