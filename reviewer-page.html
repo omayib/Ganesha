@@ -45,6 +45,18 @@
                 background-color: #f77f00;
                 border-color: #f77f00;
             }
+
+            .btn-dicuss {
+                color: rgb(0, 0, 0);
+                background-color: #fffb00;
+                border-color: #fffb00;
+            }
+
+            .btn-approve {
+                color: #fff;
+                background-color: #0aa128;
+                border-color: #0aa128;
+            }
             .panel-danger>.panel-heading {
                 color: #ffffff;
                 background-color: #fd3f3f;
@@ -308,36 +320,39 @@
                 <div class="panel panel-primary">
                   <div class="panel-heading">ULASAN</div>
                   <div class="panel-body">
-                    <form v-on:submit.prevent="submitCatatan">
                     <div class="input-group input-group-lg" style="margin-bottom: 25px;">
                         <div>
-                        <label>Apa tanggapan Bp/Ibu ?</label>
+                            <label>Apa tanggapan Bp/Ibu ?</label>
+                        </div>
+                        <div>
+                            <textarea rows="8" cols="50"
+                                style="width: 100%;"
+                                v-model="response"
+                                placeholder="tanggapan balik dari calon dosen pembimbing"
+                                class="form-control"
+                                @keyup.enter=""
+                            ></textarea>
+                        </div>
                     </div>
                     <div>
-                        <textarea rows="8" cols="50"
-                            style="width: 100%;"
-                            v-model="noteDraft.feedback"
-                            placeholder="tanggapan balik dari calon dosen pembimbing"
-                            class="form-control"
-                            @keyup.enter=""
-                        ></textarea>
-                    </div>
-                    </div>
-                    <div class="form-group">
                         <table style="width: 100%;border-spacing: 10px;">
                             <tr >
-                                <td style="margin: 0px; border-spacing: 10px;padding-right: 10px;">
-                                    <button class="btn btn-danger" style="width: 100%;margin: 5px;">TOLAK</button>
 
+                                <td style="margin: 0px;border-spacing: 10px;padding-left: 10px;">
+                                    <button class="btn btn-dicuss" style="width: 100%;margin: 5px;" @click="onClickButtonReact('diskusi')">DISKUSI DULU</button>
                                 </td>
                                 <td style="margin: 0px;border-spacing: 10px;padding-left: 10px;">
-                                    <button class="btn btn-primary" style="width: 100%;margin: 5px;">SETUJU</button>
+                                    <button class="btn btn-approve" style="width: 100%;margin: 5px;"@click="onClickButtonReact('disetujui')">SETUJU</button>
+                                </td>
+
+                                <td style="margin: 0px; border-spacing: 10px;padding-right: 10px;">
+                                    <button class="btn btn-danger" style="width: 100%;margin: 5px;" @click="onClickButtonReact('ditolak')">TOLAK</button>
+
                                 </td>
                             </tr>
                         </table>
 
                     </div>
-                    </form>
                     <p class="text-muted">
                         Petunjuk : Bapak Ibu boleh mengosongkan tanggapan lalu simpan
                     </p>
@@ -383,6 +398,7 @@
                 proposalDraft:{judul:"",dosenTerpilih:"",fileUrlProposal:"",fileUrlTranskrip:""},
                 notes:[],
                 noteDraft:{kendala:"",solusi:"", feedback:""},
+                response:"",
                 fileProposal:"",
                 fileUrlProposal:"",
                 fileTranskrip:"",
@@ -393,6 +409,7 @@
                 Loading: VueLoading,
             },
             methods:{
+                onClickButtonReact,
                 submitFileTranskrip,
                 submitFileProposal,
                 submitUsulan,
@@ -420,6 +437,41 @@
                 this.onClickButtonCari();
             }
         })
+        function onClickButtonReact(e){
+            console.log(e);
+            var url = baseUrl + "?action=503";
+            var dataTobeUpload = {
+                nim:this.profileDraft.nim,
+                response:this.response,
+                reaction:e
+            }
+            console.log(dataTobeUpload);
+            let loader = this.$loading.show({
+                    loader: "dots",
+             });
+            axios({
+                    method: "post",
+                    url: url,
+                    data: dataTobeUpload,
+                    headers: {
+                        "Content-Type": "text/plain",
+                    },
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods":"GET,PUT,POST,DELETE,PATCH,OPTIONS"
+             }).then(function(response){
+                console.log(response);
+                loader.hide();
+                Toast.fire({
+                    icon: "success",
+                    title: "Tanggapan berhasil diperbarui",
+                 });
+             }).catch(function (response) {
+                    console.log(response);
+                    loader.hide();
+            });
+
+
+        }
         /*
                     {timestamp:"9/2/2022", masalah:"lorem ipsum",solusi:"dep amit slira mark mov da wen", feedback:"yes"},
                     {timestamp:"9/2/2022", masalah:"lorem ipsum 2",solusi:"dep amit slira mark mov da wen 2", feedback:"yes"},
@@ -610,6 +662,8 @@
 
                             this.fileUrlProposal = _profile.proposal;
                             this.fileUrlTranskrip = _profile.transkrip;
+
+                            this.response = _profile.catatan;
 
                             // this.dosenTerpilih.name = _profile.pembimbing_nama;
                             // this.dosenTerpilih.email = _profile.pembimbing_email;
